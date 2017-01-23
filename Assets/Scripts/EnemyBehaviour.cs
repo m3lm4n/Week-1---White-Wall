@@ -10,18 +10,29 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	private NavMeshAgent agent;
 	private Cannon cannon;
+	private Transform cannonHorizontalTransform;
 
-	// Use this for initialization
+	private float rotationSpeed = 0.1f;
+
 	void Start () {
 		agent = GetComponent<NavMeshAgent> ();
 		agent.destination = target.transform.position;
 
 		cannon = GetComponentsInChildren<Cannon> ()[0];
+
+		cannonHorizontalTransform = transform.Find ("CannonTransform");
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-		if (GetDistanceToTarget () < range) {
+		
+	}
+
+	void FixedUpdate() {
+		if (cannon.isFiring) {
+			cannonHorizontalTransform.rotation = GetRotationToTarget ();
+		}
+
+		if (GetDistanceToTarget () < range && !cannon.isFiring) {
 			agent.Stop ();
 			cannon.StartFiring ();
 		}
@@ -33,5 +44,9 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	public void acquireTarget(GameObject newTarget) {
 		target = newTarget;
+	}
+
+	Quaternion GetRotationToTarget() {
+		return Quaternion.LookRotation (target.transform.position - cannonHorizontalTransform.position, Vector3.up);
 	}
 }

@@ -11,7 +11,8 @@ public class Cannon : MonoBehaviour {
 
 	private float timeSinceLastBullet;
 	private float bulletInterval;
-	private bool isFiring;
+
+	public bool isFiring;
 
 	// Use this for initialization
 	void Start () {
